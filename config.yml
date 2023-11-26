@@ -5,31 +5,12 @@
   tasks:
 
   - name: Update Repository Index (Ubuntu)
-    tags: always
     apt:
       update_cache: yes
     changed_when: false
     when: ansible_distribution == "Ubuntu"
 
-  - name: Install docker in Ubuntu
-    apt:
-      name: docker.io
-      state: present
-      update_cache: yes
-    when: ansible_distribution == "Ubuntu"
-
-  - name: Start Docker in Ubuntu
-    service:
-      name: docker
-      state: restarted
-
-  - name: Add docker group to current user
-    ansible.builtin.group:
-      name: ivan-docker
-      state: present
-
-  - name: Copy Docker file
-    copy:
-      src: dockerfile
-      dest: /ivan/docker/
-
+- hosts: docker
+  become: true
+  roles:
+    - docker
